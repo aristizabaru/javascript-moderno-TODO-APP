@@ -1,9 +1,9 @@
 import { Todo } from "../todos/models/todo.model"
 
-const filters = {
-    all: 'all',
-    completed: 'completed',
-    pending: 'pending'
+const Filters = {
+    All: 'all',
+    Completed: 'completed',
+    Pending: 'pending'
 }
 
 const state = {
@@ -14,11 +14,10 @@ const state = {
         new Todo('Piedra del poder'),
         new Todo('Piedra del realidad'),
     ],
-    filter: filters.all
+    filter: Filters.All
 }
 
 const initStore = () => {
-    console.log(state)
     console.log('InitStore')
 }
 
@@ -30,16 +29,16 @@ const loadStore = () => {
  * 
  * @param {String} filter 
  */
-const getTodos = (filter = filters.all) => {
+const getTodos = (filter = Filters.all) => {
 
     switch (filter) {
-        case filters.all:
+        case Filters.All:
             return [...state.todos] // se desestructura para evitar pasar la referencia del objeto
 
-        case filters.completed:
+        case Filters.Completed:
             return state.todos.filter(todo => todo.done)
 
-        case filters.pending:
+        case Filters.Pending:
             return state.todos.filter(todo => !todo.done)
 
         default:
@@ -88,7 +87,7 @@ const deleteCompleted = () => {
  * 
  * @param {filters} newFilter 
  */
-const setFilter = (newFilter = filters.all) => {
+const setFilter = (newFilter = Filters.All) => {
     if (!Object.values(filters).includes(newFilter)) throw new Error('Invalid filter')
 
     state.filter = newFilter
