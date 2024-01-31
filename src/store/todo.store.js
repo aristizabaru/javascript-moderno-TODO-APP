@@ -8,21 +8,27 @@ const Filters = {
 
 const state = {
     todos: [
-        new Todo('Piedra del alma'),
-        new Todo('Piedra del infinito'),
-        new Todo('Piedra del tiempo'),
-        new Todo('Piedra del poder'),
-        new Todo('Piedra del realidad'),
     ],
     filter: Filters.All
 }
 
 const initStore = () => {
-    console.log('InitStore')
+    loadStore()
 }
 
 const loadStore = () => {
-    throw new Error('Not implemented')
+
+    const stateSerialized = localStorage.getItem('state')
+    if (!stateSerialized) return
+
+    const { todos = [], filter = Filters.All } = JSON.parse(stateSerialized)
+    state.todos = todos
+    state.filter = filter
+}
+
+const saveStateToLocalStorage = () => {
+    const stateSerialized = JSON.stringify(state)
+    localStorage.setItem('state', stateSerialized)
 }
 
 /**
@@ -55,6 +61,8 @@ const addTodo = (description) => {
 
     const newTodo = new Todo(description)
     state.todos.push(newTodo)
+
+    saveStateToLocalStorage()
 }
 
 /**
@@ -66,6 +74,8 @@ const toggleTodo = (todoId) => {
 
     const todoIndex = state.todos.findIndex(todo => todo.id === todoId)
     state.todos[todoIndex].done = !state.todos[todoIndex].done
+
+    saveStateToLocalStorage()
 }
 
 /**
@@ -76,21 +86,27 @@ const deleteTodo = (todoId) => {
     if (!todoId) throw new Error('Id is required')
 
     state.todos = state.todos.filter(todo => todo.id !== todoId)
+
+    saveStateToLocalStorage()
 }
 
 
 const deleteCompleted = () => {
-    state.todos = state.todos.filter(todo => todo.done)
+    state.todos = state.todos.filter(todo => !todo.done)
+
+    saveStateToLocalStorage()
 }
 
 /**
  * 
- * @param {filters} newFilter 
+ * @param {Filters} newFilter 
  */
 const setFilter = (newFilter = Filters.All) => {
-    if (!Object.values(filters).includes(newFilter)) throw new Error('Invalid filter')
+    if (!Object.values(Filters).includes(newFilter)) throw new Error('Invalid filter')
 
     state.filter = newFilter
+
+    saveStateToLocalStorage()
 }
 
 const getCurrentFilter = () => {
