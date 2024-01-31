@@ -1,6 +1,6 @@
 import { Todo } from "../todos/models/todo.model"
 
-const Filters = {
+export const Filters = {
     All: 'all',
     Completed: 'completed',
     Pending: 'pending'
@@ -35,7 +35,7 @@ const saveStateToLocalStorage = () => {
  * 
  * @param {String} filter 
  */
-const getTodos = (filter = Filters.all) => {
+const getTodos = (filter = Filters.All) => {
 
     switch (filter) {
         case Filters.All:
