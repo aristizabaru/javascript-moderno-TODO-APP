@@ -3,7 +3,8 @@ import html from './app.html?raw'
 import { renderTodos } from './use-cases'
 
 const ElementIds = {
-    TodoList: '.todo-list'
+    TodoList: '.todo-list',
+    NewTodoInput: '#new-todo-input'
 }
 
 /**
@@ -24,4 +25,39 @@ export const App = (elementId) => {
 
         displayTodos()
     })()
+
+    // Referencias HTML
+    const newDescriptionInput = document.querySelector(ElementIds.NewTodoInput)
+    const todoListUl = document.querySelector(ElementIds.TodoList)
+
+    // Listeners
+    newDescriptionInput.addEventListener('keyup', (event) => {
+        if (event.keyCode !== 13) return
+        if (event.target.value.trim().length === 0) return
+
+        todoStore.addTodo(event.target.value)
+        event.target.value = ''
+        displayTodos()
+    })
+
+    todoListUl.addEventListener('click', (event) => {
+        const element = event.target.closest('[data-id]')
+        const id = element.getAttribute('data-id')
+
+        todoStore.toggleTodo(id)
+        displayTodos()
+    })
+
+    todoListUl.addEventListener('click', (event) => {
+        const isDestroyElement = event.target.className === 'destroy'
+        const element = event.target.closest('[data-id]')
+
+        if (!element || !isDestroyElement) return
+
+        const id = element.getAttribute('data-id')
+
+        todoStore.deleteTodo(id)
+        displayTodos()
+    })
+
 }
